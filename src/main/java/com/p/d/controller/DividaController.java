@@ -13,11 +13,11 @@ import java.util.List;
 @CrossOrigin("*")
 public class DividaController {
 
-    @Autowired
-    private DividaService service;
+	@Autowired
+	private DividaService service;
 
-    @PostMapping
-    public List<ConsultaResponse> consultarDividas(@RequestBody ConsultaRequest request) {
-        return service.consultarDividas(request.getDocumento());
-    }
+	@PostMapping
+	public List<ConsultaResponse> consultarDividas(@RequestBody ConsultaRequest request) {
+		return service.consultarDividas(request.getDocumento());
+	}
 }

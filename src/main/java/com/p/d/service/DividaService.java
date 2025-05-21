@@ -12,39 +12,39 @@ import java.util.stream.Collectors;
 @Service
 public class DividaService {
 
-    @Autowired
-    private DividaRepository repository;
+	@Autowired
+	private DividaRepository repository;
 
-    @Autowired
-    private GovernoApiCliente governoApiClient;
+	@Autowired
+	private GovernoApiCliente governoApiClient;
 
-    private boolean validarDocumento(String documento) {
-        return documento != null && (documento.matches("[0-9]{11}") || documento.matches("[0-9]{14}"));
-    }
+	private boolean validarDocumento(String documento) {
+		return documento != null && (documento.matches("[0-9]{11}") || documento.matches("[0-9]{14}"));
+	}
 
-    public List<ConsultaResponse> consultarDividas(String documento) {
-        if (!validarDocumento(documento)) {
-            throw new IllegalArgumentException("Documento inválido. Informe um CPF ou CNPJ válido.");
-        }
+	public List<ConsultaResponse> consultarDividas(String documento) {
+		if (!validarDocumento(documento)) {
+			throw new IllegalArgumentException("Documento inválido. Informe um CPF ou CNPJ válido.");
+		}
 
-        // Aqui para integrar API:
-        
-        String respostaAPI = governoApiClient.consultarDividasPorDocumento(documento);
-        System.out.println("🔗 Resposta da API do Governo (simulada): " + respostaAPI);
+		// Aqui para integrar API:
 
-        List<Divida> dividas = repository.findByDocumento(documento);
+		String respostaAPI = governoApiClient.consultarDividasPorDocumento(documento);
+		System.out.println("🔗 Resposta da API do Governo (simulada): " + respostaAPI);
 
-        if (dividas.isEmpty()) {
-            throw new RuntimeException("Nenhuma dívida encontrada para o documento fornecido.");
-        }
+		List<Divida> dividas = repository.findByDocumento(documento);
 
-        return dividas.stream().map(divida -> {
-            ConsultaResponse response = new ConsultaResponse();
-            response.setDescricao(divida.getDescricao());
-            response.setValor(divida.getValor());
-            response.setDataVencimento(divida.getDataVencimento());
-            response.setPaga(divida.isPaga());
-            return response;
-        }).collect(Collectors.toList());
-    }
+		if (dividas.isEmpty()) {
+			throw new RuntimeException("Nenhuma dívida encontrada para o documento fornecido.");
+		}
+
+		return dividas.stream().map(divida -> {
+			ConsultaResponse response = new ConsultaResponse();
+			response.setDescricao(divida.getDescricao());
+			response.setValor(divida.getValor());
+			response.setDataVencimento(divida.getDataVencimento());
+			response.setPaga(divida.isPaga());
+			return response;
+		}).collect(Collectors.toList());
+	}
 }
